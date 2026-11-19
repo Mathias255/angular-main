@@ -1,3 +1,197 @@
-<h1>Welcome to the dev app!</h1>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#inicio" aria-label="Angular Lab, inicio">
+      <span class="brand-mark">A</span>
+      <span class="brand-name">angular<span>LAB</span></span>
+    </a>
+
+    <p class="sidebar-label">TU ESPACIO</p>
+    <nav class="side-nav" aria-label="Navegación principal">
+      <a class="nav-item active" href="#inicio">
+        <span class="nav-icon">⌂</span>
+        Inicio
+      </a>
+      <button
+        class="nav-item"
+        [class.active]="mostrarEjemplos()"
+        [attr.aria-expanded]="mostrarEjemplos()"
+        [attr.aria-controls]="mostrarEjemplos() ? 'rutas' : null"
+        (click)="toggleExamples()"
+      >
+        <span class="nav-icon">▦</span>
+        Explorar rutas
+      </button>
+    </nav>
+
+    <div class="sidebar-note">
+      <span class="note-mark">✦</span>
+      <p>Un paso a la vez.</p>
+      <span>Aprende creando proyectos reales.</span>
+    </div>
+
+    <div class="sidebar-footer">
+      <span class="status-dot"></span>
+      <span>Tu espacio está listo</span>
+    </div>
+  </aside>
+
+  <main class="main-content" id="inicio">
+    <header class="topbar">
+      <span class="breadcrumb">Espacio de aprendizaje <span>/</span> Inicio</span>
+      <div class="topbar-user" aria-label="Angular Lab">
+        <span class="user-avatar">A</span>
+        <span>Angular Lab</span>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <section class="hero" aria-labelledby="welcome-title">
+        <div class="hero-copy">
+          <span class="eyebrow"><span class="eyebrow-dot"></span> TU PRÓXIMA IDEA EMPIEZA AQUÍ</span>
+          <h1 id="welcome-title">Aprende Angular.<br /><span>Crea algo increíble.</span></h1>
+          <p>Explora conceptos clave con ejemplos sencillos y construye una base sólida, paso a paso.</p>
+          <button
+            class="primary-button"
+            [attr.aria-expanded]="mostrarEjemplos()"
+            [attr.aria-controls]="mostrarEjemplos() ? 'rutas' : null"
+            (click)="toggleExamples()"
+          >
+            {{ mostrarEjemplos() ? 'Ocultar rutas' : 'Explorar rutas' }}
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-orbit orbit-one"></div>
+          <div class="art-orbit orbit-two"></div>
+          <div class="art-spark spark-one">✦</div>
+          <div class="art-spark spark-two">✳</div>
+          <div class="art-core"><span>A</span></div>
+          <div class="code-chip chip-top"><span></span> component</div>
+          <div class="code-chip chip-bottom"><span></span> template</div>
+          <div class="art-caption">Construye con confianza</div>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Qué encontrarás">
+        <article class="stat-card">
+          <span class="stat-icon coral">✳</span>
+          <div><strong>06</strong><span>temas prácticos</span></div>
+          <span class="stat-arrow" aria-hidden="true">↗</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon violet">▤</span>
+          <div><strong>24</strong><span>lecciones breves</span></div>
+          <span class="stat-arrow" aria-hidden="true">↗</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon mint">⌘</span>
+          <div><strong>A tu ritmo</strong><span>aprende haciendo</span></div>
+          <span class="stat-arrow" aria-hidden="true">↗</span>
+        </article>
+      </section>
+
+      <section class="start-card" aria-label="Empieza a explorar">
+        <div class="start-mark" aria-hidden="true">{{ '{' }} {{ '}' }}</div>
+        <div class="start-copy">
+          <span class="start-kicker">HECHO PARA PRACTICAR</span>
+          <h2>De la primera línea a tu próxima app</h2>
+          <p>Elige un tema, descubre cómo funciona y ponlo en práctica en tu proyecto.</p>
+        </div>
+        <button class="text-button" (click)="toggleExamples()">
+          Ver los temas <span aria-hidden="true">→</span>
+        </button>
+      </section>
+
+      @if (mostrarEjemplos()) {
+        <section class="topics-section" id="rutas" aria-labelledby="topics-title">
+          <div class="topics-heading">
+            <div>
+              <span class="section-kicker">BIBLIOTECA</span>
+              <h2 id="topics-title">Explora los temas</h2>
+              <p>Encuentra una ruta y empieza a experimentar.</p>
+            </div>
+            <label class="search-box">
+              <span class="search-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Buscar temas</span>
+              <input
+                type="search"
+                placeholder="Buscar un tema..."
+                [value]="searchQuery()"
+                (input)="searchTopics($event)"
+              />
+              <kbd>/</kbd>
+            </label>
+          </div>
+
+          <div class="filter-row" aria-label="Filtrar por nivel">
+            @for (category of categories; track category) {
+              <button
+                class="filter-chip"
+                [class.selected]="selectedCategory() === category"
+                [attr.aria-pressed]="selectedCategory() === category"
+                (click)="setCategory(category)"
+              >
+                {{ category }}
+              </button>
+            }
+            <span class="results-count">{{ filteredTopics().length }} temas</span>
+          </div>
+
+          @if (filteredTopics().length > 0) {
+            <div class="topic-grid">
+              @for (topic of filteredTopics(); track topic.id) {
+                <article class="topic-card" [class.topic-selected]="selectedTopic()?.id === topic.id">
+                  <div class="topic-card-top">
+                    <span class="topic-icon" [attr.data-topic]="topic.id">{{ topic.icon }}</span>
+                    <span class="level-tag" [class.advanced]="topic.category === 'Intermedio'">
+                      {{ topic.category }}
+                    </span>
+                  </div>
+                  <h3>{{ topic.title }}</h3>
+                  <p>{{ topic.description }}</p>
+                  <div class="topic-card-footer">
+                    <span>{{ topic.lessons }} lecciones <span class="meta-dot">·</span> {{ topic.duration }}</span>
+                    <button
+                      class="card-action"
+                      [attr.aria-label]="'Ver ruta: ' + topic.title"
+                      (click)="selectTopic(topic)"
+                    >
+                      Ver ruta <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="empty-state">
+              <span aria-hidden="true">⌕</span>
+              <h3>No encontramos ese tema</h3>
+              <p>Prueba con otra búsqueda o elige un nivel diferente.</p>
+            </div>
+          }
+
+          @if (selectedTopic(); as topic) {
+            <aside class="topic-detail" aria-live="polite">
+              <div>
+                <span class="section-kicker">RUTA SELECCIONADA</span>
+                <h3>{{ topic.title }}</h3>
+                <p>{{ topic.details }}</p>
+              </div>
+              <button class="close-detail" aria-label="Cerrar detalle" (click)="selectTopic(null)">
+                ×
+              </button>
+            </aside>
+          }
+        </section>
+      }
+
+      <footer class="page-footer">
+        <span>Hecho para aprender haciendo.</span>
+        <span>Angular Lab <span class="footer-dot">·</span> Dev App</span>
+      </footer>
+    </div>
+  </main>
+</div>
 
 <router-outlet />
